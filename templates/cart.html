@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Shopping Cart</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container mt-4">
+        <h2>Your Shopping Cart</h2>
+        {% if not is_cart_empty %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set grand_total = namespace(value=0) %}
+                    {% for product_id, details in cart.items() %}
+                        <tr>
+                            <td>{{ details['name'] }}</td>
+                            <td>{{ details['quantity'] }}</td>
+                            <td>${{ details['price'] }}</td>
+                            <td>${{ details['price'] * details['quantity'] }}</td>
+                            {% set grand_total.value = grand_total.value + (details['price'] * details['quantity']) %}
+                        </tr>
+                    {% endfor %}
+                    <tr class="table-info">
+                        <td colspan="3" class="text-right">Grand Total:</td>
+                        <td>${{ grand_total.value }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <a href="{{ url_for('profile') }}" class="btn btn-primary">Continue Shopping</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
+        {% else %}
+            <p>Your cart is empty.</p>
+            <a href="{{ url_for('profile') }}" class="btn btn-primary">Start Shopping</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
+        {% endif %}
+    </div>
+
+    <!-- Optional JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
